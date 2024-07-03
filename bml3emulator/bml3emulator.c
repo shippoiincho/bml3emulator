@@ -32,8 +32,9 @@
 
 #include "lfs.h"
 
-// TEST TEST
+#if 0
 #include "bml3test.h"
+#endif
 
 // VGAout configuration
 
@@ -73,7 +74,6 @@ uint igenable=0;
 
 uint8_t keydata[0x80];
 
-//volatile uint8_t keycode=0;
 uint8_t keytimer=0;
 uint keycheck_count=0;
 uint8_t blink=0;
@@ -106,8 +106,7 @@ uint8_t hid_dev_addr=255;
 uint8_t hid_instance=255;
 uint8_t hid_led;
 
-//#define KEY_CHECK_INTERVAL 2000  // may be 1msec
-//#define KEY_CHECK_INTERVAL 63  // may be 31.5us
+
 #define HSYNC_INTERVAL 127  // may be 63.5us 
 #define USB_CHECK_INTERVAL 30 // 31.5us*30=1ms
 
@@ -145,7 +144,6 @@ bool __not_in_flash_func(hsync_handler)(struct repeating_timer *t) {
 
     scanline++;
 
-//    sem_acquire_blocking(&hsynclock);
     if((scanline%2)==0) {
         video_hsync=1;
     }
@@ -154,7 +152,6 @@ bool __not_in_flash_func(hsync_handler)(struct repeating_timer *t) {
         scanline=0;
     }
 
-//    sem_release(&hsynclock);
 //    video_hsync=0;
 
     return true;
@@ -187,14 +184,6 @@ void __not_in_flash_func(uart_handler)(void) {
                 return;
             }
 
-        // unsigned char str[30];
-        // sprintf(str,"%02d/%02d:%02x",uart_read_ptr,uart_write_ptr,ch);
-            
-        // cursor_x=0;
-        // cursor_y=24;
-        // fbcolor=7;
-        // video_print(str);
-
             uart_rx[uart_write_ptr]=ch;
             uart_write_ptr++;
             if(uart_write_ptr>31) {
@@ -215,14 +204,6 @@ uint8_t acia_getc() {
 
         lfs_file_read(&lfs,&lfs_file,&ch,1);
 
-        // unsigned char str[30];
-        // sprintf(str,"F:%02x",ch);
-            
-        // cursor_x=40;
-        // cursor_y=24;
-        // fbcolor=7;
-        // video_print(str);
-
         load_enabled=2; 
         file_cycle=cpu.cycles;
 
@@ -235,14 +216,6 @@ uint8_t acia_getc() {
         }
 
         ch=uart_rx[uart_read_ptr];
-
-        // unsigned char str[30];
-        // sprintf(str,"%02d/%02d:%02x",uart_read_ptr,uart_write_ptr,ch);
-            
-        // cursor_x=40;
-        // cursor_y=24;
-        // fbcolor=7;
-        // video_print(str);
 
         uart_read_ptr++;
         if(uart_read_ptr>31) {
@@ -282,29 +255,15 @@ void acia_write(uint8_t b) {
 
     if(((mode&0x20)==0)&&(save_enabled!=0)) {
 
-            // unsigned char str[16];
-            //  sprintf(str,"%F:02x",b);
-            //  cursor_x=70;
-            //  cursor_y=23;
-            //  fbcolor=7;
-            //  video_print(str);
-
         lfs_file_write(&lfs,&lfs_file,&b,1);
         save_enabled=2;
         file_cycle=cpu.cycles;
 
     } else {
 
-            // sprintf(str,"%02x",b);
-            // cursor_x=70;
-            // cursor_y=23;
-            // fbcolor=7;
-            // video_print(str);
-
                 uart_putc(uart0,tohex(b>>4));
                 uart_putc(uart0,tohex(b&0xf));
 
-///                printf("%02x",b);
     }
 
 }
@@ -1483,6 +1442,7 @@ void process_kbd_report(hid_keyboard_report_t const *report) {
             }
         }
 
+#if 0
         // TEST
         if(report->keycode[i]==0x42) {
 //            memcpy(mainram+0x7900,bml3test,0x1570);
@@ -1491,37 +1451,15 @@ void process_kbd_report(hid_keyboard_report_t const *report) {
 //            memcpy(mainram+0x5000,bml3test4,0x1000);
                 memcpy(mainram+0x4000,bml3test5,0x5000);
         }
+#endif
 
-        // Enter Menu (temporary)
+        // Enter Menu
         if(report->keycode[i]==0x45) {
             prev_report=*report;
             menumode=1;
         }                
-
-        // bench
-        // if(report->keycode[i]==0x44) {
-                        
-
-        //      uint64_t start_time=time_us_64();   
-
-        //     for(int i=0;i<100;i++) {
-        //         redraw();
-        //     }            
-
-        //     uint64_t end_time=time_us_64();
-        //     unsigned char str[16];
-
-        //     sprintf(str,"%ld",end_time-start_time);
-            
-        //     cursor_x=0;
-        //     cursor_y=24;
-        //     fbcolor=7;
-        //     video_print(str);
-
-        // }
-
-
     }
+
 } else {  // menu mode
 
     for(uint8_t i=0; i<6; i++)
@@ -1560,9 +1498,7 @@ static mc6809byte__t cpu_read(
 
         // Color register
         if((addr>=0x400)&&(addr<0x4400)) {
-//            if((colorram[addr-0x400]&0x80)==0) {
-//                ioport[0xd8]=colorram[addr-0x400];
-//            }
+
             if((ioport[0xd8]&0x80)==0) {
                 ioport[0xd8]=colorram[addr-0x400]&0x7f;
             }
@@ -1597,12 +1533,6 @@ static mc6809byte__t cpu_read(
 
                 case 0xc4:      // ACIA control
 
-                // sprintf(str,"R:%02x",0);
-                // cursor_x=65;
-                // cursor_y=23;
-                // fbcolor=7;
-                // video_print(str);
-
                     if(acia_rx_available()==0) {
                         return 2; // TX ready
                     } else {
@@ -1611,17 +1541,7 @@ static mc6809byte__t cpu_read(
 
                 case 0xc5:      // ACIA data
 
-//                    d1=fromhex(uart_getc(uart0));
-//                    d2=fromhex(uart_getc(uart0));
-
-            // sprintf(str,"%02x",d1*16+d2);
-            // cursor_x=60;
-            // cursor_y=24;
-            // fbcolor=7;
-            // video_print(str);
-
                     return acia_getc();
-//                    return d1*16+d2;
 
                 case 0xc7:  // CRTC
                     return crtc[ioport[0xc6]&0xf];
@@ -1717,12 +1637,6 @@ static void cpu_write(
             case 0xc4:          // ACIA control
 
                 ioport[0xc4]=b;
-
-            // sprintf(str,"W:%02x",b);
-            // cursor_x=60;
-            // cursor_y=23;
-            // fbcolor=7;
-            // video_print(str);
 
                 break;
 
@@ -1880,8 +1794,6 @@ int main() {
        lfs_mount(&lfs,&PICO_FLASH_CFG);
    }
 
-//    multicore_launch_core1(main_core1);
-
 //  setup emulator (for core 1)
     cpu.read  = cpu_read;
     cpu.write = cpu_write;
@@ -1902,9 +1814,6 @@ int main() {
     uint cpuwait=0;
 
     while(1) {
-
-//        while(video_hsync==1) ;
-//        while(sem_available(&hsynclock)==0) ;
 
         if(menumode==0) { // Emulator mode
 
@@ -1928,12 +1837,6 @@ int main() {
 
         if((cpu.cycles-hsync_cycle)>HSYNC_INTERVAL){
  
-//            usbcheck_count++;
-//            if(usbcheck_count>USB_CHECK_INTERVAL) {
-//                usbcheck_count=0;
-//    ///            tuh_task();
-//            }
-
             keycheck_count++;
             if(keycheck_count>0) {
 
@@ -2011,7 +1914,6 @@ int main() {
                 video_print("SAVE: UART");
             } else {
                 sprintf(str,"SAVE: %8s",filename);
-//                sprintf(str,"SAVE: %s","TEST");
                 video_print(str);
             }
             cursor_x=12;
@@ -2022,7 +1924,6 @@ int main() {
                 video_print("LOAD: UART");
             } else {
                 sprintf(str,"LOAD: %8s",filename);
-//                sprintf(str,"LOAD: %s","TEST");
                 video_print(str);
             }
 
