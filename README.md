@@ -1,4 +1,4 @@
-#Hitachi Basic Master Level-3 Emulator for Raspberry Pi Pico
+# Hitachi Basic Master Level-3 Emulator for Raspberry Pi Pico
 
 # 概要
 
