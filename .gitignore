@@ -1,4 +1,4 @@
 build/
 bml3emulator/bml3rom.h
 bml3emulator/bml3test.h
-bml3emulator/bml3kanji/
+bml3emulator/bml3kanji.h
