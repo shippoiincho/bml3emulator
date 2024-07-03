@@ -40,7 +40,7 @@ RGB の出力と VGA コネクタの間には 330 Ωの抵抗を直列に入れ�
 
 Beep 出力は GPIO5 を使っています。
 
-![pico connection](/pico.jpg)
+![pico connection](/pico.png)
 
 # 画面出力
 
@@ -90,3 +90,9 @@ UART経由の場合、単にデータを 16進数にしたものが使用され�
 - [MC6809 エミュレータ(一部改変)](https://github.com/spc476/mc6809)
 - [VGA ライブラリ(一部改変)](https://github.com/vha3/Hunter-Adams-RP2040-Demos/tree/master/VGA_Graphics)
 - [LittleFS](https://github.com/littlefs-project/littlefs)
+
+# Gallary
+
+![graph](/pic00.jpg)
+![Game1](/pic01.png)
+![Game2](/pic02.png)
