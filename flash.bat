@@ -1,0 +1,1 @@
+openocd -f interface/cmsis-dap.cfg -f target/rp2040.cfg -c "program build\bml3emulator\bml3emulator.elf verify reset exit"
