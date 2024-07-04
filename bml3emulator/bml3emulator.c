@@ -36,6 +36,12 @@
 #include "bml3test.h"
 #endif
 
+#define USE_KANJI
+
+#ifdef USE_KANJI
+#include "bml3kanji.h"
+#endif
+
 // VGAout configuration
 
 #define DOTCLOCK 25000
@@ -106,8 +112,7 @@ uint8_t hid_dev_addr=255;
 uint8_t hid_instance=255;
 uint8_t hid_led;
 
-
-#define HSYNC_INTERVAL 127  // may be 63.5us 
+#define HSYNC_INTERVAL 127  // may be 63.5us  
 #define USB_CHECK_INTERVAL 30 // 31.5us*30=1ms
 
 // Define the flash sizes
@@ -1530,6 +1535,20 @@ static mc6809byte__t cpu_read(
                 case 0x18:  // FDC
                 case 0x19:
                     return 0;
+
+#ifdef USE_KANJI
+
+                case 0x75:
+
+                    return bml3kanji[(ioport[0x75]*256+ioport[0x76])*2];
+
+                case 0x76:
+
+                    return bml3kanji[(ioport[0x75]*256+ioport[0x76])*2+1];
+
+
+#endif
+
 
                 case 0xc4:      // ACIA control
 

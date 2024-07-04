@@ -1,4 +1,4 @@
-# Hitachi Basic Master Level-3 Emulator for Raspberry Pi Pico (Work in Progress)
+# Hitachi Basic Master Level-3 Emulator for Raspberry Pi Pico
 
 # 概要
 
@@ -16,6 +16,7 @@ PIO が必要だったので pico-sdk を使っています。
 - ACIA (一部機能のみ)
 - IG
 - Beep 出力
+- 漢字 ROM (オプション)
 
 一応 IG の機能もあるので、マーク５用のソフトもそれなりに動くかと思います。
 なお、ROM エリアのバンク切り替えはテストしていないので、バグがあるかもしれません。
@@ -24,6 +25,8 @@ PIO が必要だったので pico-sdk を使っています。
 
 いつものようにレベル３実機の ROM が必要です。
 `bml3rom_dummy.h` を `bml3rom.h` にリネームの上、BASIC ROM (24KB)とフォントROM (8KB) のデータを入れてください。
+
+漢字ROM が必要な場合は、同様に漢字ROM の内容(128KB) を `bml3kanji.h` の中に入れてください。
 
 # 接続
 
