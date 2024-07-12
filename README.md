@@ -41,7 +41,7 @@ VGA コネクタとの接続は以下の通りです
 
 RGB の出力と VGA コネクタの間には 330 Ωの抵抗を直列に入れてください。
 
-Beep 出力は GPIO5 を使っています。
+Beep 出力は GPIO6 を使っています。
 
 ![pico connection](/pico.png)
 
